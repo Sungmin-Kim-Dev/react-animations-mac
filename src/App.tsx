@@ -3,7 +3,7 @@ import {motion, useMotionValue, useMotionValueEvent, useScroll, useTransform} fr
 
 const Wrapper = styled(motion.div)`
   width: 100vw;
-  height: 100vh;
+  height: 200vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,14 +31,18 @@ const App = () => {
     ]
   );
 
-  
+  const {scrollYProgress} = useScroll();
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 3]);
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    console.log("Page scroll Progress: ", latest);
+  });
   useMotionValueEvent(rotateZ, "change", (l) => {
     console.log("dragX:", l);
   });
 
   return (
     <Wrapper style={{background: gradient}}>
-      <Box style={{x, rotateZ}} drag="x" dragSnapToOrigin />
+      <Box style={{x, rotateZ, scale}} drag="x" dragSnapToOrigin />
     </Wrapper>
   );
 };
