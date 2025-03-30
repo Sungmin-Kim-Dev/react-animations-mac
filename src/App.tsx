@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import {motion, useMotionValue, useMotionValueEvent, useTransform} from "motion/react";
+import {motion, useMotionValue, useMotionValueEvent, useScroll, useTransform} from "motion/react";
 
-const Wrapper = styled.div`
+const Wrapper = styled(motion.div)`
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -20,14 +20,25 @@ const Box = styled(motion.div)`
 
 const App = () => {
   const x = useMotionValue(0);
-  const scale = useTransform(x, [-250, 0, 250], [1.5, 1, 0.5]);
-  useMotionValueEvent(scale, "change", (l) => {
-    console.log(l);
+  const rotateZ = useTransform(x, [-250, 250], [-360, 360]);
+  const gradient = useTransform(
+    x,
+    [-250, 0, 250],
+    [
+      "linear-gradient(135deg, rgb(0, 214, 238), rgb(8, 0, 238))",
+      "linear-gradient(135deg, rgb(238, 0, 153), rgb(221, 0, 238))",
+      "linear-gradient(135deg, rgb(0, 238, 91), rgb(234, 238, 0))",
+    ]
+  );
+
+  
+  useMotionValueEvent(rotateZ, "change", (l) => {
+    console.log("dragX:", l);
   });
 
   return (
-    <Wrapper>
-      <Box style={{x, scale: scale}} drag="x" dragSnapToOrigin />
+    <Wrapper style={{background: gradient}}>
+      <Box style={{x, rotateZ}} drag="x" dragSnapToOrigin />
     </Wrapper>
   );
 };
